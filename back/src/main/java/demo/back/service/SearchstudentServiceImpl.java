@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import demo.back.mapper.SearchstudentMapper;
 import demo.back.pojo.Student;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.List;
@@ -19,19 +21,34 @@ public class SearchstudentServiceImpl{
     @Autowired
     private SearchstudentMapper studentMapper;
 
-//    查找操作
-    public List<Student> seachstudent(Student student) {
-//        System.out.println("service层中的page:"+page.getCurrent());
-//        System.out.println("service层中的student:"+student.getSno());
+//    获取页数
+    public List<Student> getTotals(Student student) {
         LambdaQueryWrapper<Student> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
-                .eq(student.getSno()!="", Student::getSno, student.getSno())       // 学号精确匹配
-                .like(student.getSname()!="", Student::getSname, student.getSname()) // 姓名模糊查询
-                .eq(student.getSsex()!="", Student::getSsex, student.getSsex())     // 性别精确匹配
-                .eq(student.getSage()!="", Student::getSage, student.getSage())     // 年龄精确匹配
-                .eq(student.getSdept()!="", Student::getSdept, student.getSdept()); // 系别精确匹配
+                .eq(student.getSno()!="", Student::getSno, student.getSno())
+                .like(student.getSname()!="", Student::getSname, student.getSname())
+                .eq(student.getSsex()!="", Student::getSsex, student.getSsex())
+                .eq(student.getSage() != "", Student::getSage, student.getSage())  // 年龄用 Integer 判空
+                .eq(student.getSdept()!="", Student::getSdept, student.getSdept());
 
-        return studentMapper.selectList(queryWrapper);//使用Mapper CRUD接⼝
+        // 调用 selectPage() 方法实现分页查询
+        return studentMapper.selectList(queryWrapper);
+    }
+
+//    查找操作
+    public Page<Student> seachstudent(Student student,Page page) {
+        System.out.println("service层中的page:"+page.getCurrent());
+        System.out.println("service层中的student:"+student.getSno());
+        LambdaQueryWrapper<Student> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(student.getSno()!="", Student::getSno, student.getSno())
+                .like(student.getSname()!="", Student::getSname, student.getSname())
+                .eq(student.getSsex()!="", Student::getSsex, student.getSsex())
+                .eq(student.getSage() != "", Student::getSage, student.getSage())  // 年龄用 Integer 判空
+                .eq(student.getSdept()!="", Student::getSdept, student.getSdept());
+
+        // 调用 selectPage() 方法实现分页查询
+        return studentMapper.selectPage(page, queryWrapper);
     }
 
 //    删除操作
@@ -40,7 +57,7 @@ public class SearchstudentServiceImpl{
     }
 
 //    修改操作
-    public void reviseStudent(Student student,Integer oldsno){
+    public void reviseStudent(Student student,@RequestParam("oldsno") String oldsno){
         studentMapper.reviseStudent(student,oldsno);
     }
 }

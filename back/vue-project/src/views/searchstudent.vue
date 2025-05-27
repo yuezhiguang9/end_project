@@ -76,13 +76,22 @@
               <button @click="openEditDialog(item)">修改</button>
             </td>
           </tr>
-          <!-- <tr>
-            <select v-model="current" v-for="(item, index) in response" :key="index">
-              <option value="index">index</option>
-            </select>
-          </tr> -->
         </tbody>
       </table>
+<!--      分页功能-->
+      <div class="pagination">
+        <button @click="prevPage" :disabled="Current === 1">上一页</button>
+        <span>第 {{ Current }} 页 / 共 {{ totalPages }} 页</span>
+        <button @click="nextPage" :disabled="Current >= totalPages">下一页</button>
+
+        <select v-model="Size" @change="handlePageSizeChange">
+          <option value="5">5 条/页</option>
+          <option value="10">10 条/页</option>
+          <option value="20">20 条/页</option>
+        </select>
+
+        <span class="total">共 {{ total }} 条数据</span>
+      </div>
     </div>
 
     <!-- 编辑弹窗 -->
@@ -110,23 +119,13 @@
 </template>
 
 <script setup>
-  import { ref, watch, computed } from "vue";
+  import { ref, computed } from "vue";
   import axios from "axios";
 
   // 响应式数据
   const oldsno = ref("");
-  const student = ref({});
-  const page = ref({});
-  const sno = ref("");
-  const sname = ref("");
-  const ssex = ref("");
-  const sage = ref("");
-  const sdept = ref("");
   const response = ref("");
   const loading = ref(false);
-  const current = ref(1);
-  const size = ref(5);
-
   const selectedRows = ref([]); // 选中的行（存储学号）
   const showEditDialog = ref(false); // 是否显示编辑弹窗
   const editingItem = ref({
@@ -213,34 +212,81 @@
     showEditDialog.value = false; //关闭弹窗
   }
 
-  // 监听所有查询参数
-  watch([editingItem], (neweditingItem) => {
-    console.log("参数变化:   " + neweditingItem.value);
-  });
 
-  // 查询student表
+//   分页功能
+  const sno=ref("")
+  const sname=ref("")
+  const ssex=ref("")
+  const sage=ref("")
+  const sdept=ref("")
+  const Current=ref(1)
+  const Size=ref(5)
+  const total = ref(0);
+  var totalPages = ref(0);
+
+  // 修改搜索方法
   function searchstudent() {
     loading.value = true;
-    axios
-      .get("http://localhost:8080/searchstudent", {
-        params: {
-          sno: sno.value,
-          sname: sname.value,
-          ssex: ssex.value,
-          sage: sage.value,
-          sdept: sdept.value,
-        },
-      })
-      .then((res) => {
-        response.value = res.data;
-      })
-      .catch((err) => {
-        response.value = { error: err.message }; //返回错误的原因
-      })
-      .finally(() => {
-        loading.value = false;
-      });
+
+    // 先获取总数
+    axios.get("http://localhost:8080/gettotals", {
+      params: {
+        sno:sno.value,
+        sname:sname.value,
+        ssex:ssex.value,
+        sage:sage.value,
+        sdept:sdept.value,
+      },
+    }).then((res) => {
+      const data = res.data;
+      if(Array.isArray(data)){
+        total.value = data.length; // 总记录数
+        totalPages.value = Math.ceil(data.length / Size.value); //
+        console.log("totalPages"+totalPages.value)
+      }
+    });
+
+    // 再获取分页数据
+    axios.get("http://localhost:8080/searchstudent", {
+      params: {
+        sno:sno.value,
+        sname:sname.value,
+        ssex:ssex.value,
+        sage:sage.value,
+        sdept:sdept.value,
+        current:Current.value,
+        size:Size.value,
+      }
+    }).then((res) => {
+      response.value = res.data.records;
+      console.log("response:",response.value);
+    }).catch((err) => {
+    console.log(err)
+    }).finally(() => {
+      loading.value = false;
+    });
   }
+
+  // 新增分页方法
+  const prevPage = () => {
+    if (Current.value > 1) {
+      Current.value--;
+      searchstudent();
+    }
+  };
+
+  const nextPage = () => {
+    if (Current.value < totalPages.value) {
+      Current.value++;
+      searchstudent();
+    }
+  };
+
+  const handlePageSizeChange = () => {
+    Current.value = 1; // 重置到第一页
+    searchstudent();
+  };
+
 </script>
 
 <style scoped>
@@ -341,8 +387,6 @@
   }
   .deletestudent {
     background: #ffbca0;
-    cursor: not-allowed;
-    background: #409eff;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -406,5 +450,38 @@
     padding: 20px;
     text-align: center;
     font-size: 16px;
+  }
+  /*分页功能的样式*/
+  /* 新增分页样式 */
+  .pagination {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .pagination button {
+    padding: 6px 12px;
+    background: #409eff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .pagination button:disabled {
+    background: #c0c4cc;
+    cursor: not-allowed;
+  }
+
+  .pagination select {
+    padding: 5px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+  }
+
+  .total {
+    color: #606266;
+    margin-left: 10px;
   }
 </style>

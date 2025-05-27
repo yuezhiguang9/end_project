@@ -5,23 +5,27 @@ import lombok.Data;
 @Data
 public class PageReg {
 //    请求第几页
-    private Integer current = 1;
+    private Integer Current = 1;
 //    每页的记录数
-    private Integer size = 5;
-
-    public Integer getCurrent() {
-        return current;
+    private Integer Size = 20;
+    public PageReg(Integer current,Integer size){
+        this.Current = current;
+        this.Size = size;
     }
 
-    public Integer getSize() {
-        return size;
+    public Integer getCurrent() {
+        return Current;
     }
 
     public void setCurrent(Integer current) {
-        this.current = current;
+        Current = current;
+    }
+
+    public Integer getSize() {
+        return Size;
     }
 
     public void setSize(Integer size) {
-        this.size = size;
+        Size = size;
     }
 }

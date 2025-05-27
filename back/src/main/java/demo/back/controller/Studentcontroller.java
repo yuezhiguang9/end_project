@@ -1,6 +1,6 @@
 package demo.back.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import demo.back.pojo.PageReg;
 import demo.back.pojo.Student;
@@ -18,13 +18,24 @@ public class Studentcontroller {
     @Autowired
     private SearchstudentServiceImpl searchstudentServiceImpl;
 
+    @GetMapping("/gettotals")
+    public List<Student> gettotals(String sno,String sname,String ssex,String sage,String sdept){
+        Student student = new Student(sno,sname,ssex,sage,sdept);
+        System.out.println("!!!!"+student.getSdept());
+        return searchstudentServiceImpl.getTotals(student);
+    }
+
     @GetMapping("/searchstudent")
-    public List<Student> servicesearch(Student student){
+    public Page<Student> servicesearch(String sno,String sname,String ssex,String sage,String sdept,Integer current,Integer size){
 //        这两句话用于测试是否正常获取
-//        System.out.println("==="+pageReg.getCurrent());
-//        System.out.println("==="+pageReg.getSize());
-//        Page<Student> page = new Page<>(pageReg.getCurrent(),pageReg.getSize());
-        return searchstudentServiceImpl.seachstudent(student);
+        Student student = new Student(sno,sname,ssex,sage,sdept);
+        PageReg pageReg = new PageReg(current,size);
+        System.out.println("==="+student.getSdept());
+        System.out.println("==="+pageReg.getCurrent());
+        System.out.println("==="+pageReg.getSize());
+
+        Page<Student> page = new Page<>(pageReg.getCurrent(),pageReg.getSize());
+        return searchstudentServiceImpl.seachstudent(student,page);
     }
 
     @DeleteMapping("/deleteStudent")
@@ -41,7 +52,7 @@ public class Studentcontroller {
     }
 
     @PutMapping("/reviseStudent")
-    public ResponseEntity<String> reviseStudent(@RequestBody Student student,Integer oldsno) {
+    public ResponseEntity<String> reviseStudent(@RequestBody Student student,@RequestParam("oldsno") String oldsno) {
         if(student.getSno()==null){
             return ResponseEntity.badRequest().body("sno不能为空");
         }

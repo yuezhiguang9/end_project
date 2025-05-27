@@ -16,10 +16,14 @@ public class Student extends Model<Student> {
     private String sage;
     private String sdept;
 
-
-    public void SearchStudentDTO() {
-
+    public Student(String sno, String sname, String ssex, String sage, String sdept) {
+        this.sno = sno;
+        this.sname = sname;
+        this.ssex = ssex;
+        this.sage = sage;
+        this.sdept = sdept;
     }
+
     public String getAll(){
         return this.sno+this.sname+this.ssex+this.sage+this.sdept;
     }
