@@ -24,4 +24,10 @@
         </set>
         WHERE sno = #{oldsno}  <!-- 使用旧主键定位 -->
     </update>
+
+    <insert id="addStudent">
+        insert into Student
+        values (#{student.sno},#{student.sname},#{student.ssex},#{student.sage},#{student.sdept})
+
+    </insert>
 </mapper>

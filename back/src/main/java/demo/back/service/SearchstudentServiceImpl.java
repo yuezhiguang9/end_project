@@ -8,6 +8,7 @@ import demo.back.mapper.SearchstudentMapper;
 import demo.back.pojo.Student;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -59,5 +60,15 @@ public class SearchstudentServiceImpl{
 //    修改操作
     public void reviseStudent(Student student,@RequestParam("oldsno") String oldsno){
         studentMapper.reviseStudent(student,oldsno);
+    }
+
+//    添加操作
+    public String addStudent(Student student){
+        try{
+            studentMapper.addStudent(student);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return "添加成功";
     }
 }

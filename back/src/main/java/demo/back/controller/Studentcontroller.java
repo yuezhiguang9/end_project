@@ -65,4 +65,9 @@ public class Studentcontroller {
         }
     }
 
+    @PutMapping("/addStudent")
+    public String addStudent(@RequestBody Student student){
+        return searchstudentServiceImpl.addStudent(student);
+    }
+
 }

@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface SearchstudentMapper extends BaseMapper<Student> {
     int deleteBySnoList(@Param("snoList") List<String> snoList);
-    int reviseStudent(@Param("student") Student student,
-                      @RequestParam("oldsno") String oldsno);
+    int reviseStudent(@Param("student") Student student, @RequestParam("oldsno") String oldsno);
+    int addStudent(@Param("student")Student student);
 }

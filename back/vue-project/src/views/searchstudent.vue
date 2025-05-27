@@ -38,6 +38,11 @@
       <button @click="deleteItem" class="deletestudent" :disabled="selectedRows.length === 0">
         删除所选学生
       </button>
+
+<!--      添加学生按钮-->
+      <button @click="showAdd = true" class="search-btn">
+        添加学生
+      </button>
     </div>
 
     <!-- 结果展示区域 -->
@@ -84,13 +89,61 @@
         <span>第 {{ Current }} 页 / 共 {{ totalPages }} 页</span>
         <button @click="nextPage" :disabled="Current >= totalPages">下一页</button>
 
-        <select v-model="Size" @change="handlePageSizeChange">
+        <select v-model="Size" @change="handlePageSizeChange" class="Size">
           <option value="5">5 条/页</option>
           <option value="10">10 条/页</option>
           <option value="20">20 条/页</option>
         </select>
 
         <span class="total">共 {{ total }} 条数据</span>
+      </div>
+    </div>
+
+<!--    添加学生的弹窗-->
+    <!-- 弹窗容器 -->
+    <div class="modal" v-if="showAdd">
+      <div class="modal-content">
+        <!-- 弹窗标题 -->
+        <div class="modal-header">
+          <h2>添加学生</h2>
+          <button class="close-btn" @click="showAdd = false">&times;</button>
+        </div>
+
+        <!-- 表单内容 -->
+        <div class="form-group">
+          <label>学号</label>
+          <input type="text" v-model="student.sno" placeholder="请输入学号">
+        </div>
+
+        <div class="form-group">
+          <label>姓名</label>
+          <input type="text" v-model="student.sname" placeholder="请输入姓名">
+        </div>
+
+        <div class="form-group">
+          <label>性别</label>
+          <select v-model="student.ssex">
+            <option value="">请选择性别</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>年龄</label>
+          <input type="number" v-model="student.sage" min="1" max="100" placeholder="请输入年龄">
+        </div>
+
+        <div class="form-group">
+          <label>系部</label>
+          <input type="text" v-model="student.sdept" placeholder="请输入所属系部">
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="modal-footer">
+          <button class="btn cancel-btn" @click="showAdd = false">取消</button>
+          <button class="btn confirm-btn" @click="addStudent">确认添加</button>
+        </div>
       </div>
     </div>
 
@@ -115,12 +168,14 @@
         </form>
       </div>
     </div>
+
   </div>
 </template>
 
 <script setup>
   import { ref, computed } from "vue";
   import axios from "axios";
+  import "@/style/seachStudent.css"
 
   // 响应式数据
   const oldsno = ref("");
@@ -213,6 +268,37 @@
   }
 
 
+  //添加学生功能
+  const student = ref({
+    sno:"",
+    sname:"",
+    ssex:"",
+    sage:"",
+    sdept:"",
+  })
+  const showAdd = ref(false);
+  function addStudent(){
+    if(student.value.sno===""||student.value.sname===""||student.value.ssex===""){
+      setTimeout(alert("请至少输入学号、姓名、性别三个！！！！！"),3000);
+    }
+    else{
+      try {
+        axios.put("http://localhost:8080/addStudent",student.value,{
+         headers:{
+           "Content-Type":"application/json",
+          }
+        });
+       showAdd.value = false;//关闭弹窗
+        searchstudent();
+       alert("添加成功")
+      }catch (err){
+        alert("添加失败",err)
+      }
+    }
+  }
+
+
+
 //   分页功能
   const sno=ref("")
   const sname=ref("")
@@ -289,199 +375,4 @@
 
 </script>
 
-<style scoped>
-  .dialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 
-  .dialog-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-  }
-
-  .dialog-content form {
-    display: grid;
-    gap: 10px;
-  }
-  .container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  .search-box {
-    background: #f5f7fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    align-items: end;
-  }
-
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  label {
-    font-weight: 500;
-    color: #606266;
-    font-size: 14px;
-  }
-
-  input,
-  select {
-    padding: 8px 12px;
-    border: 1px solid #dcdfe6;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-  }
-
-  input:focus,
-  select:focus {
-    outline: none;
-    border-color: #409eff;
-    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
-  }
-
-  .search-btn {
-    background: #409eff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .search-btn:hover:not(:disabled) {
-    background: #66b1ff;
-  }
-
-  .search-btn:disabled {
-    background: #a0cfff;
-    cursor: not-allowed;
-  }
-
-  .loading-icon {
-    animation: rotate 1s linear infinite;
-  }
-  .deletestudent {
-    background: #ffbca0;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  @keyframes rotate {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .result-container {
-    margin-top: 24px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .data-table th,
-  .data-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ebeef5;
-  }
-
-  .data-table th {
-    background: #f5f7fa;
-    color: #909399;
-    font-weight: 600;
-  }
-
-  .data-table tr:hover {
-    background-color: #fafafa;
-  }
-
-  .error-message {
-    color: #f56c6c;
-    padding: 20px;
-    background: #fef0f0;
-    border-radius: 4px;
-  }
-
-  .no-data {
-    color: #909399;
-    padding: 20px;
-    text-align: center;
-    font-size: 16px;
-  }
-  /*分页功能的样式*/
-  /* 新增分页样式 */
-  .pagination {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-
-  .pagination button {
-    padding: 6px 12px;
-    background: #409eff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .pagination button:disabled {
-    background: #c0c4cc;
-    cursor: not-allowed;
-  }
-
-  .pagination select {
-    padding: 5px;
-    border: 1px solid #dcdfe6;
-    border-radius: 4px;
-  }
-
-  .total {
-    color: #606266;
-    margin-left: 10px;
-  }
-</style>
