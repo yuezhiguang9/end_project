@@ -13,5 +13,36 @@ public class Course extends Model<Course> {
     private String cno;
     private String cname;
     private String cpon;
-    private String ccredit;
+
+    public Course(String cno, String cname, String cpon) {
+        this.cno = cno;
+        this.cname = cname;
+        this.cpon = cpon;
+    }
+
+
+    public String getCno() {
+        return cno;
+    }
+
+    public void setCno(String cno) {
+        this.cno = cno;
+    }
+
+    public String getCname() {
+        return cname;
+    }
+
+    public void setCname(String cname) {
+        this.cname = cname;
+    }
+
+    public String getCpon() {
+        return cpon;
+    }
+
+    public void setCpon(String cpon) {
+        this.cpon = cpon;
+    }
+
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.back.mapper.SearchScMapper">
+
+    <!-- 批量删除（兼容 MySQL） -->
+    <delete id="deleteBySnoCnoList">
+        DELETE FROM sc
+        WHERE
+        <foreach collection="scList" item="item" separator=" OR ">
+            (sno = #{item.sno} AND cno = #{item.cno})
+        </foreach>
+    </delete>
+
+    <!-- 更新记录 -->
+    <update id="reviseSc">
+        UPDATE sc
+        <set>
+            <if test="sc.sno != null">sno = #{sc.sno},</if>
+            <if test="sc.cno != null">cno = #{sc.cno},</if>
+            <if test="sc.grade != null">grade = #{sc.grade},</if>
+        </set>
+        WHERE sno = #{oldsno} AND cno = #{oldcno}
+    </update>
+
+    <!-- 新增记录 -->
+    <insert id="addSc">
+        INSERT INTO sc(sno, cno, grade)
+        VALUES (#{sc.sno}, #{sc.cno}, #{sc.grade})
+    </insert>
+
+</mapper>

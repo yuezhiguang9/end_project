@@ -35,13 +35,15 @@
         <span v-if="loading" class="loading-icon">⌛</span>
       </button>
 
-      <button @click="deleteItem" class="deletestudent" :disabled="selectedRows.length === 0">
-        删除所选学生
-      </button>
+
 
 <!--      添加学生按钮-->
       <button @click="showAdd = true" class="search-btn">
         添加学生
+      </button>
+
+      <button @click="deleteItem" class="deletestudent" v-show="selectedRows.length>0">
+        删除所选学生
       </button>
     </div>
 
@@ -173,7 +175,7 @@
 </template>
 
 <script setup>
-  import { ref, computed } from "vue";
+import {ref, computed, toRefs} from "vue";
   import axios from "axios";
   import "@/style/seachStudent.css"
 
@@ -227,6 +229,7 @@
         })
         .then((res) => {
           console.log("删除成功:", res.data);
+          selectedRows.value = toRefs([]);
           searchstudent();
           // 可选：刷新数据或更新界面
         })
