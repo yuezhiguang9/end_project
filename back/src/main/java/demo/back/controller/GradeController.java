@@ -26,11 +26,11 @@ public class GradeController {
     }
 
     @GetMapping("/searchGrade")
-    public Page<Grade> searchGrade(String sno, String sname, String sdept, String cname, Integer current, Integer size) {
+    public Page<Grade> searchGrade(String sno, String sname, String sdept, String cname, String sortOrder, Integer current, Integer size) {
         Grade grade = new Grade(sno, sname, sdept, cname, 0);
         PageReg pageReg = new PageReg(current, size);
         Page<Student> page = new Page<>(pageReg.getCurrent(), pageReg.getSize());
-        return searchGradeService.seachGrade(grade, page);
+        return searchGradeService.seachGrade(grade, page, sortOrder);
     }
 
     @PutMapping("/reviseGrade")

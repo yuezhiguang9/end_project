@@ -1,5 +1,4 @@
-
-    /* 弹窗蒙层 */
+/* 弹窗蒙层 */
 .modal {
     position: fixed;
     top: 0;
@@ -71,7 +70,8 @@ input, select {
     font-size: 14px;
     transition: border-color 0.3s;
 }
-.Size{
+
+.Size {
     width: 7%;
 }
 
@@ -114,6 +114,7 @@ input:focus, select:focus {
 .confirm-btn:hover {
     background: #337ecc;
 }
+
 .dialog {
     position: fixed;
     top: 0;
@@ -137,6 +138,7 @@ input:focus, select:focus {
     display: grid;
     gap: 10px;
 }
+
 .container {
     max-width: 1200px;
     margin: 20px auto;
@@ -209,6 +211,7 @@ select:focus {
 .loading-icon {
     animation: rotate 1s linear infinite;
 }
+
 .deletestudent {
     background: #ffbca0;
     color: white;
@@ -275,6 +278,7 @@ select:focus {
     text-align: center;
     font-size: 16px;
 }
+
 /*分页功能的样式*/
 /* 新增分页样式 */
 .pagination {
@@ -308,3 +312,55 @@ select:focus {
     color: #606266;
     margin-left: 10px;
 }
+
+.sortable-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.sort-icon {
+    margin-left: 5px;
+    font-size: 0.8em;
+    transition: color 0.3s;
+}
+
+.sort-icon.asc::after {
+    content: '↑';
+    color: #2196F3;
+}
+
+.sort-icon.desc::after {
+    content: '↓';
+    color: #2196F3;
+}
+
+.sortable-header {
+    cursor: pointer;
+    position: relative;
+}
+
+.sort-icon {
+    margin-left: 8px;
+    font-size: 0.8em;
+    color: #999;
+}
+
+.sort-icon::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    margin-left: 4px;
+}
+
+.sort-icon.asc::after {
+    border-top: 4px solid #2196F3;
+}
+
+.sort-icon.desc::after {
+    border-bottom: 4px solid #2196F3;
+}
+

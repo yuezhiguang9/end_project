@@ -20,24 +20,24 @@ public class ScController {
     private ScServiceImpl scService;
 
     @GetMapping("/ScgetTotals")
-    public List<Sc> ScgetTotals(String sno, String cno, String grade){
+    public List<Sc> ScgetTotals(String sno, String cno, String grade) {
         Sc sc = new Sc();
         sc.setSno(sno);
         sc.setCno(cno);
         sc.setGrade(grade);
-        System.out.println("!!!!"+sc.getCno());
+        System.out.println("!!!!" + sc.getCno());
         return scService.getTotals(sc);
     }
 
     @GetMapping("/searchSc")
-    public Page<Sc> seachsc(String sno, String cno, String grade, Integer current, Integer size){
+    public Page<Sc> seachsc(String sno, String cno, String grade, String sortOrder, Integer current, Integer size) {
         Sc sc = new Sc();
         sc.setSno(sno);
         sc.setCno(cno);
         sc.setGrade(grade);
-        PageReg pageReg = new PageReg(current,size);
-        Page<Sc> page = new Page<>(pageReg.getCurrent(),pageReg.getSize());
-        return scService.seachsc(sc,page);
+        PageReg pageReg = new PageReg(current, size);
+        Page<Sc> page = new Page<>(pageReg.getCurrent(), pageReg.getSize());
+        return scService.seachsc(sc, page, sortOrder);
     }
 
     @GetMapping("/deleteSc")
@@ -45,7 +45,7 @@ public class ScController {
         if (snoList.isEmpty() || cnoList.isEmpty()) {
             return ResponseEntity.badRequest().body("sno和cno列表不能为空");
         }
-        if (snoList.size() != cnoList.size()){
+        if (snoList.size() != cnoList.size()) {
             return ResponseEntity.badRequest().body("sno和cno列表长度不一致");
         }
         ScList scList = new ScList(snoList.toArray(new String[0]), cnoList.toArray(new String[0]));
@@ -55,7 +55,7 @@ public class ScController {
 
     @PutMapping("/reviseSc")
     public ResponseEntity<String> reviseSc(@RequestBody Sc sc, @RequestParam("oldsno") String oldsno, @RequestParam("oldcno") String oldcno) {
-        scService.reviseSc(sc,oldsno,oldcno);
+        scService.reviseSc(sc, oldsno, oldcno);
         return ResponseEntity.ok("修改成功");
     }
 

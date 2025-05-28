@@ -38,7 +38,13 @@
       <th>姓名</th>
       <th>系部</th>
       <th>课程名</th>
-      <th>成绩</th>
+      <th @click="handleSort">成绩
+        <div>
+        <span>
+          {{ sortOrder === "asc" ? "↑" : "↓" }}
+        </span>
+        </div>
+      </th>
       <th>操作</th>
 
     </tr>
@@ -115,6 +121,15 @@ const total = ref(0);
 var totalPages = ref(0);
 const selectedRows = ref([]);
 
+
+const sortOrder = ref("asc")
+
+// 排序
+function handleSort() {
+  sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";//切换
+  searchGrade();//刷新页面
+}
+
 // 修改搜索方法
 function searchGrade() {
   loading.value = true;
@@ -127,6 +142,7 @@ function searchGrade() {
         sname: sname.value,
         sdept: sdept.value,
         cname: cname.value,
+        sortOrder: sortOrder.value,
         current: Current.value,
         size: Size.value,
       }
@@ -223,6 +239,9 @@ function saveEdit() {
         headers: {
           "Content-type": "application/json",
         },
+        params: {
+          sortOrder: sortOrder.value,
+        }
       })
       .then(() => {
         console.log("修改成功", editingItem.value);

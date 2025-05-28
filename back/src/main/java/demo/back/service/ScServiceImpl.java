@@ -6,6 +6,7 @@ import demo.back.mapper.SearchScMapper;
 import demo.back.pojo.Course;
 import demo.back.pojo.Sc;
 import demo.back.pojo.ScList;
+import demo.back.pojo.Student;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -21,7 +22,7 @@ public class ScServiceImpl {
     private SearchScMapper searchScMapper;
 
 
-    public List<Sc> getTotals(Sc sc){
+    public List<Sc> getTotals(Sc sc) {
         LambdaQueryWrapper<Sc> queryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotEmpty(sc.getSno())) {
             queryWrapper.eq(Sc::getSno, sc.getSno());
@@ -35,24 +36,30 @@ public class ScServiceImpl {
         return searchScMapper.selectList(queryWrapper);
     }
 
-    public Page<Sc> seachsc(Sc sc, Page page){
+    public Page<Sc> seachsc(Sc sc, Page page, String sortOrder) {
         LambdaQueryWrapper<Sc> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
-                .eq(sc.getSno()!="", Sc::getSno, sc.getSno())
-                .eq(sc.getCno()!="", Sc::getCno, sc.getCno())
-                .eq(sc.getGrade()!="", Sc::getGrade, sc.getGrade());
+                .eq(sc.getSno() != "", Sc::getSno, sc.getSno())
+                .eq(sc.getCno() != "", Sc::getCno, sc.getCno())
+                .eq(sc.getGrade() != "", Sc::getGrade, sc.getGrade());
+        boolean isAsc = "asc".equals(sortOrder);
+        if (isAsc) {
+            queryWrapper.orderByAsc(Sc::getGrade);
+        } else {
+            queryWrapper.orderByDesc(Sc::getGrade);
+        }
         return searchScMapper.selectPage(page, queryWrapper);
     }
 
-    public void deleteBySnoCnoList(ScList scList){
+    public void deleteBySnoCnoList(ScList scList) {
         searchScMapper.deleteBySnoCnoList(scList);
     }
 
-    public void reviseSc(Sc sc,String oldsno,String oldcno){
-        searchScMapper.reviseSc(sc,oldsno,oldcno);
+    public void reviseSc(Sc sc, String oldsno, String oldcno) {
+        searchScMapper.reviseSc(sc, oldsno, oldcno);
     }
 
-    public String addSc(Sc sc){
+    public String addSc(Sc sc) {
         try {
             if (searchScMapper.exists(new LambdaQueryWrapper<Sc>()
                     .eq(Sc::getSno, sc.getSno())

@@ -42,7 +42,13 @@
           <th><input type="checkbox" :checked="allSelected" @change="toggleAll"/></th>
           <th>学号</th>
           <th>课程号</th>
-          <th>分数</th>
+          <th @click="handleSort">分数
+            <div>
+              <span>
+                {{ sortOrder === 'asc' ? '↑' : '↓' }}
+              </span>
+            </div>
+          </th>
           <th>操作</th>
         </tr>
         </thead>
@@ -286,6 +292,12 @@ const Current = ref(1)
 const Size = ref(5)
 const total = ref(0);
 var totalPages = ref(0);
+const sortOrder = ref("asc");
+
+function handleSort() {
+  sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+  searchSc();//刷新页面
+}
 
 // 修改搜索方法
 function searchSc() {
@@ -298,6 +310,7 @@ function searchSc() {
         sno: sno.value,
         cno: cno.value,
         grade: grade.value,
+        sortOrder: sortOrder.value, // 新增排序顺序参数
         current: Current.value,
         size: Size.value,
       }

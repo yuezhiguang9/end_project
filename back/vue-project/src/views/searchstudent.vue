@@ -56,10 +56,24 @@
         <thead>
         <tr>
           <th><input type="checkbox" :checked="allSelected" @change="toggleAll"/></th>
-          <th>学号</th>
+          <th>
+            <div class="sort-header" @click="handleSort('sno')">
+              学号
+              <span v-show="sortField === 'sno'">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+              </span>
+            </div>
+          </th>
           <th>姓名</th>
           <th>性别</th>
-          <th>年龄</th>
+
+          <!-- 年龄表头添加排序按钮 -->
+          <th @click="handleSort('sage')">
+            年龄
+            <span v-show="sortField === 'sage'">
+            {{ sortOrder === 'asc' ? '↑' : '↓' }}
+          </span>
+          </th>
           <th>院系</th>
           <th>操作</th>
         </tr>
@@ -216,6 +230,20 @@ const toggleSelect = (sno) => {
   }
 };
 
+// 在methods中添加
+const toggleSort = (field) => {
+  if (sortField.value === field) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortField.value = field;
+    sortOrder.value = 'asc';
+  }
+  // 切换排序时重置到第一页
+  Current.value = 1;
+  searchstudent();
+};
+
+
 // 删除条目
 function deleteItem() {
   if (confirm("确定删除所选学生吗？")) {
@@ -300,6 +328,23 @@ function addStudent() {
 }
 
 
+const sortField = ref(""); // 排序字段（sno或sage）
+const sortOrder = ref("asc"); // 排序顺序（asc或desc）
+
+// 排序处理函数
+const handleSort = (field) => {
+  if (sortField.value === field) {
+    // 切换排序顺序
+    sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+  } else {
+    // 新字段默认升序
+    sortField.value = field;
+    sortOrder.value = "asc";
+  }
+  // 触发搜索（带排序参数）
+  searchstudent();
+};
+
 //   分页功能
 const sno = ref("")
 const sname = ref("")
@@ -334,6 +379,7 @@ function searchstudent() {
   });
 
   // 再获取分页数据
+  // 调用分页接口时传递排序参数
   axios.get("http://localhost:8080/searchstudent", {
     params: {
       sno: sno.value,
@@ -343,6 +389,8 @@ function searchstudent() {
       sdept: sdept.value,
       current: Current.value,
       size: Size.value,
+      sortField: sortField.value, // 新增排序字段参数
+      sortOrder: sortOrder.value // 新增排序顺序参数
     }
   }).then((res) => {
     response.value = res.data.records;
@@ -352,6 +400,7 @@ function searchstudent() {
   }).finally(() => {
     loading.value = false;
   });
+
 }
 
 // 新增分页方法
@@ -373,6 +422,7 @@ const handlePageSizeChange = () => {
   Current.value = 1; // 重置到第一页
   searchstudent();
 };
+
 
 </script>
 

@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @TableName("Student")
 public class Student extends Model<Student> {
-    @TableId(value="sno",type = IdType.AUTO)
+    @TableId(value = "sno", type = IdType.AUTO)
     private String sno;
     private String sname;
     private String ssex;
@@ -24,9 +24,14 @@ public class Student extends Model<Student> {
         this.sdept = sdept;
     }
 
-    public String getAll(){
-        return this.sno+this.sname+this.ssex+this.sage+this.sdept;
+    public String getAll() {
+        return this.sno + this.sname + this.ssex + this.sage + this.sdept;
     }
+
+    public Student() {
+        
+    }
+
     public String getSno() {
         return sno;
     }

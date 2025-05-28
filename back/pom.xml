@@ -46,18 +46,24 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-<!--    导入mybatis的包    -->
+        <!--    导入mybatis的包    -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
             <version>3.5.7</version>
         </dependency>
-<!--    导入mysql要的包-->
+        <!--    导入mysql要的包-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.26</version>
         </dependency>
+        <!-- Spring Data Commons (包含 Sort 类) -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+
 
     </dependencies>
 
