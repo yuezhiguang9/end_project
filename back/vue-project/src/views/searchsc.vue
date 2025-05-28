@@ -3,17 +3,17 @@
     <!-- 查询条件区域 -->
     <div class="search-box">
       <div class="input-group">
-        <label>课程号：</label>
-        <input id="sno" type="text" v-model="sno" placeholder="请输入学号" />
+        <label>学号：</label>
+        <input id="sno" type="text" v-model="sno" placeholder="请输入学号"/>
       </div>
 
       <div class="input-group">
         <label>课程名：</label>
-        <input id="cno" type="text" v-model="cno" placeholder="请输入课程名" />
+        <input id="cno" type="text" v-model="cno" placeholder="请输入课程名"/>
       </div>
       <div class="input-group">
         <label>学分：</label>
-        <input id="grade" type="text" v-model="grade" placeholder="请输入成绩" />
+        <input id="grade" type="text" v-model="grade" placeholder="请输入成绩"/>
       </div>
       <button @click="searchSc" :disabled="loading" class="search-btn">
         {{ loading ? "查询中..." : "开始查询" }}
@@ -39,7 +39,7 @@
       <table v-else-if="response?.length > 0" class="data-table">
         <thead>
         <tr>
-          <th><input type="checkbox" :checked="allSelected" @change="toggleAll" /></th>
+          <th><input type="checkbox" :checked="allSelected" @change="toggleAll"/></th>
           <th>学号</th>
           <th>课程号</th>
           <th>分数</th>
@@ -120,9 +120,9 @@
       <div class="dialog-content">
         <h3>修改学生信息</h3>
         <form @submit.prevent="saveEdit">
-          <label>学号：<input v-model="editingItem.sno" /></label>
-          <label>课程号：<input v-model="editingItem.cno" /></label>
-          <label>分数：<input type="number" v-model="editingItem.grade" /></label>
+          <label>学号：<input v-model="editingItem.sno"/></label>
+          <label>课程号：<input v-model="editingItem.cno"/></label>
+          <label>分数：<input type="number" v-model="editingItem.grade"/></label>
           <button type="submit">保存</button>
           <button @click="showEditDialog = false">取消</button>
         </form>
@@ -133,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import {ref, computed} from "vue";
 import axios from "axios";
 import "@/style/seachStudent.css"
 
@@ -148,14 +148,14 @@ const loading = ref(false);
 
 const selectedSnoRows = ref([]); // 选中的行(存储sno）
 
-const  selectedCnoRows = ref([]);//  选中的行(存储cno）)
+const selectedCnoRows = ref([]);//  选中的行(存储cno）)
 
 const showEditDialog = ref(false); // 是否显示编辑弹窗
 
 const editingItem = ref({
   sno: "",
   cno: "",
-  grade:"" ,
+  grade: "",
 }); // 正在编辑的数据
 
 // 计算属性：是否全选
@@ -175,7 +175,7 @@ const toggleAll = (e) => {
 };
 
 // 单选切换
-const toggleSelect = (sno,cno) => {
+const toggleSelect = (sno, cno) => {
   const index1 = selectedSnoRows.value.indexOf(sno);
   const index2 = selectedCnoRows.value.indexOf(cno);
   if (index1 > -1 && index2 > -1) {
@@ -193,8 +193,8 @@ function deleteItem() {
     axios
         .delete("http://localhost:8080/deleteSc", {
           data: {
-            snoList:selectedSnoRows.value,
-            cnoList:selectedCnoRows.value,// 因为删除时，sno和cno是唯一的，所以可以这样写
+            snoList: selectedSnoRows.value,
+            cnoList: selectedCnoRows.value,// 因为删除时，sno和cno是唯一的，所以可以这样写
           },
           headers: {
             "Content-Type": "application/json", // 明确 JSON 格式
@@ -248,11 +248,12 @@ function saveEdit() {
 
 //添加学生功能
 const sc = ref({
-  sno:"",
-  cno:"",
-  grade:"",
+  sno: "",
+  cno: "",
+  grade: "",
 })
 const showAdd = ref(false);
+
 async function addSc() {
   if (sc.value.sno === "" || sc.value.cno === "") {
     alert("请至少输入学号、课程号！");
@@ -277,13 +278,12 @@ async function addSc() {
 }
 
 
-
 //   分页功能
-const sno=ref("")
-const cno=ref("")
-const grade=ref("")
-const Current=ref(1)
-const Size=ref(5)
+const sno = ref("")
+const cno = ref("")
+const grade = ref("")
+const Current = ref(1)
+const Size = ref(5)
 const total = ref(0);
 var totalPages = ref(0);
 

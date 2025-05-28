@@ -4,11 +4,7 @@
       <router-link to="/">查询student表</router-link>
       <router-link to="/searchcourse">查询course表</router-link>
       <router-link to="/searchsc">查询sc表</router-link>
-    </div>
-    <div class="revise">
-      <router-link to="/revisestudent">修改student表</router-link>
-      <router-link to="/revisecourse">修改course表</router-link>
-      <router-link to="/revisesc">修改sc表</router-link>
+      <router-link to="/searchgrade">综合查询</router-link>
     </div>
   </div>
 

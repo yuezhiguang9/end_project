@@ -3,12 +3,12 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="demo.back.mapper.SearchstudentMapper">
-<delete id="deleteBySnoList">
-        DELETE FROM sc
+    <delete id="deleteBySnoList">
+        DELETE FROM student
         WHERE sno IN
         <foreach collection="snoList" item="sno" open="(" separator="," close=")">
-           #{sno}
-         </foreach>
+            #{sno}
+        </foreach>
     </delete>
 
     <!-- deleteStudentBysno.xml -->
@@ -25,8 +25,8 @@
         WHERE sno = #{oldsno}  <!-- 使用旧主键定位 -->
     </update>
 
-    <insert id="addStudent" >
+    <insert id="addStudent">
         insert into Student
-        values (#{student.sno},#{student.sname},#{student.ssex},#{student.sage},#{student.sdept})
+        values (#{student.sno}, #{student.sname}, #{student.ssex}, #{student.sage}, #{student.sdept})
     </insert>
 </mapper>
