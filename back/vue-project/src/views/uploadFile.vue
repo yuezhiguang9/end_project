@@ -6,17 +6,6 @@
       <h2 class="card-title">上传文件</h2>
       <div class="form-group">
         <input type="text" placeholder="请输入作者" v-model="author" class="form-control author-input">
-
-        <select name="type" id="filetype" v-model="fileType" class="form-control filetype-select">
-          <option value="">请选择文件类型</option>
-          <option value="pdf">PDF</option>
-          <option value="txt">TXT</option>
-          <option value="doc">DOC</option>
-          <option value="xls">XLS</option>
-          <option value="ppt">PPT</option>
-          <option value="pptx">PPTX</option>
-        </select>
-
         <input type="file" ref="fileInput" @change="handleFileChange" class="form-control-file">
 
         <button @click="uploadFile" :disabled="isUploading" class="btn btn-primary upload-btn">
@@ -39,6 +28,7 @@
             <th>文件名</th>
             <th>大小</th>
             <th>保存路径</th>
+            <th>文件格式</th>
             <th>修改时间</th>
             <th>操作</th>
           </tr>
@@ -47,9 +37,9 @@
           <tr v-for="file in fileList" :key="file.name">
             <td>{{ file.author }}</td>
             <td>{{ file.fileName }}</td>
-            <td>{{ file.fileLength }}</td>
-            <td>{{ file.filePath }}</td>
             <td>{{ formatFileSize(file.fileLength) }}</td>
+            <td>{{ file.filePath }}</td>
+            <td>{{ file.fileType }}</td>
             <td>{{ formatDate(file.lastModified) }}</td>
             <td>
               <button @click="downloadFile(file.fileName)" class="btn btn-success btn-sm download-btn">下载</button>
@@ -76,6 +66,7 @@ const fetchFileList = async () => {
   try {
     const response = await axios.get('http://localhost:8080/fileList');
     fileList.value = response.data;
+    console.log("fileList:", fileList.value);
   } catch (error) {
     console.error('获取文件列表失败:', error);
     alert('获取文件列表失败: ' + (error.response?.data?.message || error.message));
@@ -102,11 +93,6 @@ const uploadFile = async () => {
     uploadMessage.value = '请输入作者';
     return;
   }
-  if (!fileType.value) {
-    uploadMessage.value = '请选择文件类型';
-    return;
-  }
-
   isUploading.value = true;
   uploadMessage.value = '';
 
@@ -117,7 +103,6 @@ const uploadFile = async () => {
     const response = await axios.post('http://localhost:8080/upload', formData, {
       params: {
         author: author.value,
-        fileType: fileType.value,
       },
       headers: {'Content-Type': 'multipart/form-data'}
     });

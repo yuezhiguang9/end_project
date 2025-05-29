@@ -46,28 +46,28 @@ public class FileDownloadController {
 
     @GetMapping("/fileList")
     public ResponseEntity<MyFile[]> fileList() {
-//        File directory = new File(UPLOAD_DIR); // 使用注入的路径
-//        File[] fList = directory.listFiles();//获取文件列表
-//        MyFile[] myFiles = null;
-//        if (fList != null) {
-//            myFiles = new MyFile[fList.length];
-//        }
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
-//        if (fList != null) {
-//            for (int i = 0; i < fList.length; i++) {
-//                myFiles[i] = new MyFile();
-//                myFiles[i].setFileName(fList[i].getName());
-//                myFiles[i].setFileLength(fList[i].length() + "bytes");
-//                long lastModified = fList[i].lastModified();
-//                Date date = new Date(lastModified);
-//                String lastModifiedTime = sdf.format(date);
-//                myFiles[i].setLastModified(lastModifiedTime);
-//                System.out.println(myFiles[i].toString());
-//            }
-//        }
+        File directory = new File(UPLOAD_DIR); // 使用注入的路径
+        File[] fList = directory.listFiles();//获取文件列表
+        MyFile[] myFiles = null;
+        if (fList != null) {
+            myFiles = new MyFile[fList.length];
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
+        if (fList != null) {
+            for (int i = 0; i < fList.length; i++) {
+                myFiles[i] = new MyFile();
+                myFiles[i].setFileName(fList[i].getName());
+                myFiles[i].setFileLength(fList[i].length() + "bytes");
+                long lastModified = fList[i].lastModified();
+                Date date = new Date(lastModified);
+                String lastModifiedTime = sdf.format(date);
+                myFiles[i].setLastModified(lastModifiedTime);
+                System.out.println(myFiles[i].toString());
+            }
+        }
 
 
-        return fileListService.searchFiles();
+        return fileListService.searchFiles(myFiles);
     }
 
 

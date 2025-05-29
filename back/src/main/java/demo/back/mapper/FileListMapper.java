@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface FileListMapper extends BaseMapper<MyFile> {
     MyFile[] selectAlll();
+
+    void deleteById(String fileName);
+
 }

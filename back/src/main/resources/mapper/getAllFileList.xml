@@ -9,4 +9,9 @@
     </select>
 
 
+    <delete id="deleteById">
+        delete
+        from file
+        where fileName = #{fileName}
+    </delete>
 </mapper>

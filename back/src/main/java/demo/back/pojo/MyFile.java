@@ -21,6 +21,9 @@ public class MyFile {
     @TableField("lastModified")
     private String lastModified;
 
+    @TableField("fileOnelyname")
+    private String fileOnelyname;
+
     public String getLastModified() {
         return lastModified;
     }
@@ -69,4 +72,11 @@ public class MyFile {
         this.filePath = filePath;
     }
 
+    public String getFileOnelyname() {
+        return fileOnelyname;
+    }
+
+    public void setFileOnelyname(String fileOnelyname) {
+        this.fileOnelyname = fileOnelyname;
+    }
 }
